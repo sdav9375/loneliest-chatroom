@@ -86,6 +86,7 @@ main {
   background-size: 10px 10px;
   height: 25px;
   width: 25px;
+  direction: ltr;
   text-indent: -999999px;
 }
 .message span.timestamp {
