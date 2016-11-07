@@ -1,14 +1,13 @@
-// on keydown enter - createNewMessage
-// on click delete - deleteMessage
-
 var chatWindow = document.getElementById('conversation');
 var sendButton = document.getElementById('new-message-button');
 var imLonelyButton = document.getElementById('lonely');
-var deleteButton = document.getElementsByClassName("delete");
+var textArea = document.getElementById('new-message-body');
 
+sendButton.onclick = getMessage;
+imLonelyButton.onclick = getJoke;
+textArea.onkeypress = pressEnter;
 
 function newMessageTemplate (author, message, timestamp) {
-  console.log("trigger newMessageTemplate...");
   var newListItem = document.createElement('li');
   newListItem.className = 'message';
   newListItem.innerHTML =
@@ -17,86 +16,64 @@ function newMessageTemplate (author, message, timestamp) {
           "<p class='message-body'>" + message + "</p>",
           "<span class='timestamp'>" + timestamp + "</span>",
           ].join('\n');
-          console.log(newListItem);
+  var deleteLink = newListItem.querySelector('.delete');
+  deleteLink.onclick = deleteMessage;
   return newListItem;
 }
 
-function getAuthor() {
-  console.log("get author...");
-  var i = 0;
-  var authors = ['Me', 'Myself', 'I'];
-  var author = authors[i % 3];
-  return author;
-}
-
-function getMessage() {
-  // console.log("get message...");
-  // take content from textarea#new-message-body set to variable newMessage
-}
-
 function getTimestamp() {
-  console.log("get timestamp...");
   var day = new Date();
   var timestamp = (day.getHours() + ":" + day.getMinutes());
   return timestamp;
 }
 
-var getJoke = function jokes() {
-  console.log("get joke...");
+function pressEnter(e) {
+ var key = e.which;
+ if (key === 13) {
+   e.preventDefault();
+   getMessage();
+ }
+}
 
+function getMessage() {
+  var message = document.getElementById('new-message-body').value;
+  createNewMessage(message);
+}
+
+var i = 0;
+
+function createNewMessage(messageString) {
+  var authors = ['Me', 'Myself', 'I'];
+  var author = authors[i % 3];
+  var timestamp=  getTimestamp();
+  var newMessage = newMessageTemplate (author, messageString, timestamp);
+  var messageWindow = document.getElementById('new-message-body');
+  chatWindow.appendChild(newMessage);
+  messageWindow.value = '';
+  i++;
+}
+
+function getJoke() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://api.icndb.com/jokes/random', true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       var resp = JSON.parse(xhr.response);
       var joke = resp.value.joke;
-      console.log('in joke success')
-      console.log(joke);
-      return joke;
+      return createJokeMessage(joke);
     }
   }
+  xhr.open('GET', 'http://api.icndb.com/jokes/random', true);
   xhr.send(null);
 }
 
-
-
-function createNewMessage() {
-  console.log("trigger createNewMessage...");
-  // When input type button #new-message-button is clicked or hit 'enter'
-
-  var author = getAuthor();
-  var message= getMessage();
+function createJokeMessage(messageData) {
+  var author= 'Internet';
   var timestamp=  getTimestamp();
-
-  // pass it to newMessageTemplate()
-  var newMessage = newMessageTemplate ('bob', "message", 'timestamp');
+  var newMessage = newMessageTemplate (author, messageData, timestamp);
   chatWindow.appendChild(newMessage);
-
 }
-
-function createJokeMessage(getJoke) {
-  console.log("trigger createJokeMessage...");
-    getJoke();
-    console.log('in createJokeMessage right after getJoke called');
-    var author= 'Internet';
-    var timestamp=  getTimestamp();
-    console.log("in createJokeMessage right before getJoke variable set");
-    var joke = getJoke;
-    console.log(joke);
-    console.log(timestamp);
-
-    // pass it to newMessageTemplate()
-    var newMessage = newMessageTemplate (author, joke, timestamp);
-    chatWindow.appendChild(newMessage);
-}
-
 
 function deleteMessage() {
-  console.log("trigger deleteMessage...");
-
-
-// when delete clicked - removes parent list item from ol
+  var messageItem = this.parentNode;
+  chatWindow.removeChild(messageItem);
 }
-
-sendButton.onclick = createNewMessage;
-imLonelyButton.onclick = createJokeMessage;

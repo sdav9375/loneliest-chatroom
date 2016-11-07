@@ -55,34 +55,3 @@ $(function() {
    });
  }
 });
-
-
-
-// var DONE = 4; // readyState 4 means the request is done.
-// var OK = 200; // status 200 is a successful return.
-  // if (xhr.readyState === DONE) {
-  //   if (xhr.status === OK) {
-  //     console.log(xhr.response); // 'This is the returned text.'
-  //   } else {
-  //     console.log('Error: ' + xhr.status); // An error occurred during the request.
-  //   }
-  // }
-}
-}
-
-// response.onload = function() {
-//   if (response.type = 'success') {
-//     var resp = response.value.joke;
-//     return resp;
-//     console.log(resp);
-//   } else {
-//     var resp = "We reached our target server, but it returned an error"
-//     return resp;
-//     console.log('an error');
-//   }
-// }
-// response.onerror = function() {
-//   var resp = "There was a connection error"
-//   return resp;
-//   console.log('connection error');
-//   }
