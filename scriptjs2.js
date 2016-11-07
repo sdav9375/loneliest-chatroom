@@ -1,10 +1,10 @@
 // on keydown enter - createNewMessage
-// on click delete - deleteMessage
+
+// fix message one
 
 var chatWindow = document.getElementById('conversation');
 var sendButton = document.getElementById('new-message-button');
 var imLonelyButton = document.getElementById('lonely');
-var deleteButton = document.getElementsByClassName("delete");
 
 
 function newMessageTemplate (author, message, timestamp) {
@@ -18,6 +18,8 @@ function newMessageTemplate (author, message, timestamp) {
           "<span class='timestamp'>" + timestamp + "</span>",
           ].join('\n');
           console.log(newListItem);
+  var deleteLink = newListItem.querySelector('.delete');
+  deleteLink.onclick = deleteMessage;
   return newListItem;
 }
 
@@ -26,11 +28,11 @@ function getAuthor() {
   var i = 0;
   var authors = ['Me', 'Myself', 'I'];
   var author = authors[i % 3];
-  return author;
+  createNewMessage(author);
 }
 
 function getMessage() {
-  // console.log("get message...");
+  console.log("get message...");
   // take content from textarea#new-message-body set to variable newMessage
 }
 
@@ -55,34 +57,17 @@ function getJoke() {
     xhr.send(null);
   }
 
-
-
-// function createJokeMessage() {
-//   getJokes(function() {
-//       console.log('Pass2');
-//   });
-// }
-//
-// function getJoke(createJokeMessage) {
-//     //All ajax calls called here
-//     onAjaxSuccess: function() {
-//         createJokeMessage();
-//     };
-//     console.log('Pass1');
-// }
-
-
-
-function createNewMessage() {
+function createNewMessage(authorData) {
   console.log("trigger createNewMessage...");
   // When input type button #new-message-button is clicked or hit 'enter'
 
-  var author = getAuthor();
+  var author = authorData;
+  console.log(author);
   var message= getMessage();
   var timestamp=  getTimestamp();
 
   // pass it to newMessageTemplate()
-  var newMessage = newMessageTemplate ('bob', "message", 'timestamp');
+  var newMessage = newMessageTemplate (author, "message", timestamp);
   chatWindow.appendChild(newMessage);
 
 }
@@ -96,16 +81,16 @@ function createJokeMessage(messageData) {
     console.log(timestamp);
 
     var newMessage = newMessageTemplate (author, messageData, timestamp);
+
     chatWindow.appendChild(newMessage);
 }
 
 
 function deleteMessage() {
   console.log("trigger deleteMessage...");
-
-
-// when delete clicked - removes parent list item from ol
+  var messageItem = this.parentNode;
+  chatWindow.removeChild(messageItem);
 }
 
-sendButton.onclick = createNewMessage;
+sendButton.onclick = getAuthor;
 imLonelyButton.onclick = getJoke;
