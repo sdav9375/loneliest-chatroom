@@ -41,22 +41,21 @@ function getTimestamp() {
   return timestamp;
 }
 
-var getJoke = function jokes() {
-  console.log("get joke...");
-
+function getJoke() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://api.icndb.com/jokes/random', true);
-  xhr.onload = function () {
+  xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       var resp = JSON.parse(xhr.response);
       var joke = resp.value.joke;
-      console.log('in joke success')
-      console.log(joke);
-      return joke;
+      console.log('inside joke success')
+      return createJokeMessage(joke);
+      }
     }
+    xhr.open('GET', 'http://api.icndb.com/jokes/random', true);
+    xhr.send(null);
   }
-  xhr.send(null);
-}
+
+
 
 // function createJokeMessage() {
 //   getJokes(function() {
@@ -88,17 +87,15 @@ function createNewMessage() {
 
 }
 
-function createJokeMessage(joke) {
+function createJokeMessage(messageData) {
   console.log("trigger createJokeMessage...");
-    // console.log('in createJokeMessage right after getJoke called');
     var author= 'Internet';
     var timestamp=  getTimestamp();
     console.log("in createJokeMessage right before joke cl");
-    console.log(joke);
+    console.log(messageData)
     console.log(timestamp);
 
-    // pass it to newMessageTemplate()
-    var newMessage = newMessageTemplate (author, joke, timestamp);
+    var newMessage = newMessageTemplate (author, messageData, timestamp);
     chatWindow.appendChild(newMessage);
 }
 
@@ -111,4 +108,4 @@ function deleteMessage() {
 }
 
 sendButton.onclick = createNewMessage;
-imLonelyButton.onclick = createJokeMessage(getJoke);
+imLonelyButton.onclick = getJoke;
